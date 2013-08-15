@@ -251,7 +251,8 @@ NSString *const ECSlidingViewTopDidReset             = @"ECSlidingViewTopDidRese
 {
   CGPoint currentTouchPoint     = [recognizer locationInView:self.view];
   CGFloat currentTouchPositionX = currentTouchPoint.x;
-    self.shouldAllowUserInteractionsWhenAnchored = NO;
+
+  self.shouldAllowUserInteractionsWhenAnchored = NO;
   if (recognizer.state == UIGestureRecognizerStateBegan) {
     self.initialTouchPositionX = currentTouchPositionX;
     self.initialHoizontalCenter = self.topView.center.x;
@@ -264,19 +265,12 @@ NSString *const ECSlidingViewTopDidReset             = @"ECSlidingViewTopDidRese
       newCenterPosition = self.resettedCenter;
     }
     
-    ECSide currentSide = ECNoSide;
-    if (panAmount != 0) {
-      currentSide = newCenterPosition < self.initialHoizontalCenter ? ECLeft : ECRight;
-      if (self.initialPanningSide == ECNoSide) {
-        self.initialPanningSide = currentSide;
-      }
-    }
-    if (currentSide != self.initialPanningSide && !self.shouldAllowPanningToOppositeOfInitialShownController) {
-        newCenterPosition = self.initialHoizontalCenter;
+    if (!self.shouldAllowPanningToOppositeOfInitialShownController) {
+      newCenterPosition = [self checkNewCenterPositionForPanningOnOppositeSide:newCenterPosition panAmount:panAmount];
     }
       
     BOOL newCenterPositionIsOutsideAnchor = newCenterPosition < self.anchorLeftTopViewCenter || self.anchorRightTopViewCenter < newCenterPosition;
-      
+
     if ((newCenterPositionIsOutsideAnchor && self.shouldAllowPanningPastAnchor) || !newCenterPositionIsOutsideAnchor) {
       [self topViewHorizontalCenterWillChange:newCenterPosition];
       [self updateTopViewHorizontalCenter:newCenterPosition];
@@ -294,6 +288,21 @@ NSString *const ECSlidingViewTopDidReset             = @"ECSlidingViewTopDidRese
     }
     self.initialPanningSide = ECNoSide;
   }
+}
+
+- (CGFloat)checkNewCenterPositionForPanningOnOppositeSide:(CGFloat)newCenterPosition panAmount:(CGFloat)panAmount
+{
+  ECSide currentSide = ECNoSide;
+  if (panAmount != 0) {
+    currentSide = newCenterPosition < self.initialHoizontalCenter ? ECLeft : ECRight;
+    if (self.initialPanningSide == ECNoSide) {
+      self.initialPanningSide = currentSide;
+    }
+  }
+  if (currentSide != self.initialPanningSide) {
+    newCenterPosition = self.initialHoizontalCenter;
+  }
+  return newCenterPosition;
 }
 
 - (UIPanGestureRecognizer *)panGesture
