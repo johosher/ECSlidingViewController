@@ -174,9 +174,10 @@ NSString *const ECSlidingViewTopDidReset             = @"ECSlidingViewTopDidRese
 - (void)viewDidLoad
 {
   [super viewDidLoad];
-  self.shouldAllowPanningToOppositeOfInitialShownController = YES;
+  self.shouldAllowPanningPastAnchor = YES;
   self.shouldAllowUserInteractionsWhenAnchored = NO;
   self.shouldAddPanGestureRecognizerToTopViewSnapshot = NO;
+  self.shouldAllowPanningToOppositeOfInitialShownController = YES;
   self.panVelocityThreshold = 100;
   self.initialPanningSide = ECNoSide;
   self.resetTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(resetTopView)];
@@ -270,7 +271,7 @@ NSString *const ECSlidingViewTopDidReset             = @"ECSlidingViewTopDidRese
     }
       
     BOOL newCenterPositionIsOutsideAnchor = newCenterPosition < self.anchorLeftTopViewCenter || self.anchorRightTopViewCenter < newCenterPosition;
-
+    
     if ((newCenterPositionIsOutsideAnchor && self.shouldAllowPanningPastAnchor) || !newCenterPositionIsOutsideAnchor) {
       [self topViewHorizontalCenterWillChange:newCenterPosition];
       [self updateTopViewHorizontalCenter:newCenterPosition];
