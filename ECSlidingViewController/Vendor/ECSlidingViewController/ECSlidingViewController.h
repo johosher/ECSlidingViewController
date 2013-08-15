@@ -48,7 +48,9 @@ typedef enum {
   /** Left side of screen */
   ECLeft,
   /** Right side of screen */
-  ECRight
+  ECRight,
+  /** No side */
+  ECNoSide
 } ECSide;
 
 /** @constant ECResetStrategy top view behavior while anchored. */
@@ -117,6 +119,14 @@ typedef enum {
  */
 @property (nonatomic, assign) CGFloat anchorRightRevealAmount;
 
+/** Specifies the velocity of the panGesture before snapping
+ 
+ By default, this is set to 100
+ 
+ @see panGesture
+ */
+@property (nonatomic, assign) CGFloat panVelocityThreshold;
+
 /** Specifies whether or not the top view can be panned past the anchor point.
  
  Set to NO if you don't want to show the empty space behind the top and under view.
@@ -130,6 +140,12 @@ typedef enum {
  By default, this is set to NO
  */
 @property (nonatomic, assign) BOOL shouldAllowUserInteractionsWhenAnchored;
+
+/** Specifies if the user should be able to pan to the opposite side of the initial shown view controller.
+ 
+ By default, this is set to YES
+ */
+@property (nonatomic, assign) BOOL shouldAllowPanningToOppositeOfInitialShownController;
 
 /** Specifies if the top view snapshot requires a pan gesture recognizer.
  
